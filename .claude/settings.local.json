@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(where:*)",
+      "Bash(nvm list:*)",
+      "Bash(fnm:*)",
+      "Bash(claude mcp add:*)",
+      "Bash(curl:*)",
+      "Bash(npx:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev)",
+      "Bash(start http://localhost:3000)",
+      "Bash(gh auth status:*)",
+      "Bash(winget install:*)",
+      "Bash(export PATH=\"$PATH:/c/Program Files/GitHub CLI\")",
+      "Bash(gh auth login:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(vercel:*)",
+      "Bash(npm search:*)",
+      "Bash(npm view:*)",
+      "Bash(start https://supabase.com/dashboard)",
+      "Bash(start https://plant-care-fawn.vercel.app/login)",
+      "Bash(start:*)",
+      "Bash(python3:*)"
+    ]
+  }
+}
