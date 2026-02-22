@@ -1,6 +1,8 @@
 'use client'
 
 import React from 'react'
+import Link from 'next/link'
+import AuthButton from './Auth/AuthButton'
 
 // Leaf Icon
 const LeafIcon = () => (
@@ -23,27 +25,17 @@ const SearchIcon = () => (
   </svg>
 )
 
-// Bell Icon
-const BellIcon = () => (
-  <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M8 20C9.1 20 10 19.1 10 18H6C6 19.1 6.9 20 8 20ZM14 14V9C14 5.93 12.37 3.36 9.5 2.68V2C9.5 1.17 8.83 0.5 8 0.5C7.17 0.5 6.5 1.17 6.5 2V2.68C3.64 3.36 2 5.92 2 9V14L0 16V17H16V16L14 14Z"
-      fill="#57534E"
-    />
-  </svg>
-)
-
 const Header = () => {
   return (
     <header className="bg-white shadow-sm">
       <div className="max-w-[1280px] mx-auto px-10 h-[73px] flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <LeafIcon />
           <h1 className="text-xl font-bold text-[#292524]">Plant Care</h1>
-        </div>
+        </Link>
 
-        {/* Search & Notification */}
+        {/* Search & Auth */}
         <div className="flex items-center gap-4">
           {/* Search */}
           <div className="relative w-[320px]">
@@ -57,11 +49,8 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Notification Button */}
-          <button className="relative w-[40px] h-[36px] flex items-center justify-center">
-            <BellIcon />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-[#EF4444] rounded-full"></span>
-          </button>
+          {/* Auth Button */}
+          <AuthButton />
         </div>
       </div>
     </header>
