@@ -2,18 +2,17 @@
 
 import React from 'react'
 
-interface Task {
-  plant: string
+interface Plant {
+  id: string
+  name: string
+  sunlight_requirement: string
   watering: string
-  sunlight: string
   fertilization: string
 }
 
-const tasks: Task[] = [
-  { plant: 'Fiddle Leaf Fig', watering: 'In 2 days', sunlight: 'Bright, indirect', fertilization: 'In 3 weeks' },
-  { plant: 'Snake Plant', watering: 'In 5 days', sunlight: 'Low to bright, indirect', fertilization: 'In 6 weeks' },
-  { plant: 'Monstera', watering: 'In 3 days', sunlight: 'Bright, indirect', fertilization: 'In 4 weeks' },
-]
+interface TasksTableProps {
+  plants: Plant[]
+}
 
 // Calendar Icon
 const CalendarIcon = () => (
@@ -25,7 +24,21 @@ const CalendarIcon = () => (
   </svg>
 )
 
-const TasksTable: React.FC = () => {
+const TasksTable: React.FC<TasksTableProps> = ({ plants }) => {
+  if (plants.length === 0) {
+    return (
+      <div className="w-full">
+        <div className="flex items-center gap-2 mb-4">
+          <CalendarIcon />
+          <h3 className="text-xl font-semibold text-[#44403C]">Upcoming Tasks</h3>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm p-8 text-center text-[#78716C]">
+          No plants yet. Add your first plant to see tasks!
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="w-full">
       {/* Section Header */}
@@ -40,24 +53,24 @@ const TasksTable: React.FC = () => {
           {/* Table Header */}
           <thead>
             <tr className="bg-[#F5F5F4] text-xs font-medium text-[#57534E] uppercase tracking-wide">
-              <th className="text-left px-4 py-3 w-[252px]">Plant</th>
-              <th className="text-left px-4 py-3 w-[191px]">Watering</th>
-              <th className="text-left px-4 py-3 w-[343px]">Sunlight</th>
-              <th className="text-left px-4 py-3 w-[236px]">Fertilization</th>
+              <th className="text-left px-4 py-3">Plant</th>
+              <th className="text-left px-4 py-3">Watering</th>
+              <th className="text-left px-4 py-3">Sunlight</th>
+              <th className="text-left px-4 py-3">Fertilization</th>
             </tr>
           </thead>
 
           {/* Table Body */}
           <tbody>
-            {tasks.map((task, index) => (
+            {plants.map((plant, index) => (
               <tr
-                key={task.plant}
+                key={plant.id}
                 className={`border-t border-[#E7E5E4] ${index % 2 === 0 ? 'bg-white' : 'bg-[#FAFAF9]'}`}
               >
-                <td className="px-4 py-3 text-sm font-medium text-[#292524]">{task.plant}</td>
-                <td className="px-4 py-3 text-sm text-[#78716C]">{task.watering}</td>
-                <td className="px-4 py-3 text-sm text-[#78716C]">{task.sunlight}</td>
-                <td className="px-4 py-3 text-sm text-[#78716C]">{task.fertilization}</td>
+                <td className="px-4 py-3 text-sm font-medium text-[#292524]">{plant.name}</td>
+                <td className="px-4 py-3 text-sm text-[#78716C]">{plant.watering}</td>
+                <td className="px-4 py-3 text-sm text-[#78716C]">{plant.sunlight_requirement}</td>
+                <td className="px-4 py-3 text-sm text-[#78716C]">{plant.fertilization}</td>
               </tr>
             ))}
           </tbody>

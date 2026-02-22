@@ -1,13 +1,16 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 
 interface PlantCardProps {
+  id: string
   name: string
   waterDays: number
   imageUrl?: string
   hasImage?: boolean
+  onWater?: () => void
+  onDelete?: () => void
 }
 
 // Water Drop Icon
@@ -33,9 +36,72 @@ const PlaceholderIcon = () => (
   </svg>
 )
 
-const PlantCard: React.FC<PlantCardProps> = ({ name, waterDays, imageUrl, hasImage = true }) => {
+// Trash Icon
+const TrashIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 4H14M5.333 4V2.667C5.333 2.29 5.623 2 6 2H10C10.377 2 10.667 2.29 10.667 2.667V4M12.667 4V13.333C12.667 13.71 12.377 14 12 14H4C3.623 14 3.333 13.71 3.333 13.333V4H12.667Z" stroke="#EF4444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
+const PlantCard: React.FC<PlantCardProps> = ({ id, name, waterDays, imageUrl, hasImage = true, onWater, onDelete }) => {
+  const [isWatering, setIsWatering] = useState(false)
+  const [showActions, setShowActions] = useState(false)
+
+  const handleWater = async () => {
+    if (isWatering) return
+    setIsWatering(true)
+    try {
+      const response = await fetch(`/api/plants/${id}/water`, { method: 'POST' })
+      if (response.ok && onWater) {
+        onWater()
+      }
+    } catch (error) {
+      console.error('Error watering plant:', error)
+    }
+    setIsWatering(false)
+  }
+
+  const handleDelete = async () => {
+    if (!confirm(`Delete "${name}"?`)) return
+    try {
+      const response = await fetch(`/api/plants/${id}`, { method: 'DELETE' })
+      if (response.ok && onDelete) {
+        onDelete()
+      }
+    } catch (error) {
+      console.error('Error deleting plant:', error)
+    }
+  }
+
+  const getWaterText = () => {
+    if (waterDays <= 0) return 'Water today!'
+    if (waterDays === 1) return 'Water tomorrow'
+    return `Water in ${waterDays} days`
+  }
+
+  const getWaterColor = () => {
+    if (waterDays <= 0) return 'text-red-500'
+    if (waterDays <= 2) return 'text-orange-500'
+    return 'text-[#78716C]'
+  }
+
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden w-[238px]">
+    <div
+      className="bg-white rounded-lg shadow-md overflow-hidden w-[238px] relative"
+      onMouseEnter={() => setShowActions(true)}
+      onMouseLeave={() => setShowActions(false)}
+    >
+      {/* Delete button */}
+      {showActions && onDelete && (
+        <button
+          onClick={handleDelete}
+          className="absolute top-2 right-2 z-10 bg-white/90 hover:bg-red-50 p-2 rounded-full shadow-sm transition-colors"
+          title="Delete plant"
+        >
+          <TrashIcon />
+        </button>
+      )}
+
       {/* Image */}
       <div className="relative h-[192px] bg-[#E7E5E4]">
         {hasImage && imageUrl ? (
@@ -55,10 +121,20 @@ const PlantCard: React.FC<PlantCardProps> = ({ name, waterDays, imageUrl, hasIma
       {/* Info */}
       <div className="p-4">
         <h4 className="text-lg font-semibold text-[#292524] mb-1">{name}</h4>
-        <div className="flex items-center gap-1 text-sm text-[#78716C]">
+        <div className={`flex items-center gap-1 text-sm ${getWaterColor()}`}>
           <WaterIcon />
-          <span>Water in {waterDays} days</span>
+          <span>{getWaterText()}</span>
         </div>
+
+        {/* Water button */}
+        <button
+          onClick={handleWater}
+          disabled={isWatering}
+          className="mt-3 w-full flex items-center justify-center gap-2 bg-[#3B82F6] text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors disabled:opacity-50"
+        >
+          <WaterIcon />
+          <span>{isWatering ? 'Watering...' : 'Water Now'}</span>
+        </button>
       </div>
     </div>
   )
